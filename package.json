@@ -1,0 +1,46 @@
+{
+  "name": "idanalyzer2",
+  "version": "1.0.0",
+  "description": "ID Analyzer API V2 client library, scan and verify global passport, driver license and identification card.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idanalyzer/id-analyzer-v2-nodejs.git"
+  },
+  "keywords": [
+    "id",
+    "analyzer",
+    "passport",
+    "driver",
+    "license",
+    "id",
+    "card",
+    "identification",
+    "card",
+    "identity",
+    "verification",
+    "mrz",
+    "pdf417",
+    "aamva",
+    "pep",
+    "aml"
+  ],
+  "author": "ID Analyzer <support@idanalyzer.com> (https://www.idanalyzer.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/idanalyzer/id-analyzer-v2-nodejs/issues"
+  },
+  "homepage": "https://www.idanalyzer.com",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "moment": "^2.29.1"
+  },
+  "type": "module"
+}
