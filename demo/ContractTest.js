@@ -1,5 +1,5 @@
-import {Contract} from '../lib/idfort.js'
-import {APIError, InvalidArgumentException} from "../lib/Exception.js";
+import {Contract} from '../lib/idanalyzer.js'
+import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
     let c = new Contract('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')

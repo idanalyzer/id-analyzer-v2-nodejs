@@ -1,5 +1,5 @@
-import {Transaction} from '../lib/idfort.js'
-import {APIError, InvalidArgumentException} from "../lib/Exception.js";
+import {Transaction} from '../lib/idanalyzer.js'
+import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
     let t = new Transaction('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')

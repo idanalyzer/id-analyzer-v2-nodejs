@@ -1,1 +1,1 @@
-jsdoc lib/idfort.js --destination ./docWeb
+jsdoc lib/idanalyzer.js --destination ./docs

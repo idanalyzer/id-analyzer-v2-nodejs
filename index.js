@@ -1,3 +1,3 @@
-var IDFort = require('./lib/idfort.js');
+var IdAnalyzer = require('./lib/idanalyzer.js');
 
-module.exports = IDFort;
+module.exports = IdAnalyzer;

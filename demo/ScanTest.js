@@ -1,5 +1,5 @@
-import {Profile, Scanner} from '../lib/idfort.js'
-import {APIError, InvalidArgumentException} from "../lib/Exception.js";
+import {Profile, Scanner} from '../lib/idanalyzer.js'
+import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
     let profile = new Profile(Profile.SECURITY_MEDIUM)
