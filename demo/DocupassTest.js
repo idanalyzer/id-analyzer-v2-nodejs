@@ -1,7 +1,8 @@
-import {Docupass} from '../lib/idanalyzer.js'
+import {Docupass, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let d = new Docupass('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     d.throwApiException(true)
     let docuResp = await d.createDocupass("bbd8436953ef426e98d078953f258835")

@@ -1,7 +1,8 @@
-import {Profile, Scanner} from '../lib/idanalyzer.js'
+import {Profile, Scanner, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let profile = new Profile(Profile.SECURITY_MEDIUM)
     let s = new Scanner('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     s.throwApiException(true)

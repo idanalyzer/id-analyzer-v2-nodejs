@@ -1,7 +1,8 @@
-import {Biometric, Profile} from '../lib/idanalyzer.js'
+import {Biometric, Profile, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let profile = new Profile(Profile.SECURITY_MEDIUM)
     let b = new Biometric('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     b.throwApiException(true)

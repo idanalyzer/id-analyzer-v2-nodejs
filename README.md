@@ -16,10 +16,11 @@ npm install idanalyzer
 This category supports all scanning-related functions specifically used to initiate a new identity document scan & ID face verification transaction by uploading based64-encoded images.
 ![Sample ID](https://www.idanalyzer.com/img/sampleid1.jpg)
 ```javascript
-import {Profile, Scanner} from '../lib/idanalyzer.js'
+import {Profile, Scanner, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let profile = new Profile(Profile.SECURITY_MEDIUM)
     let s = new Scanner('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     s.throwApiException(true)
@@ -40,10 +41,11 @@ try {
 ## Biometric
 There are two primary functions within this class. The first one is verifyFace and the second is verifyLiveness.
 ```javascript
-import {Biometric, Profile} from '../lib/idanalyzer.js'
+import {Biometric, Profile, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let profile = new Profile(Profile.SECURITY_MEDIUM)
     let b = new Biometric('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     b.throwApiException(true)
@@ -64,10 +66,11 @@ try {
 ## Contract
 All contract-related feature sets are available in Contract class. There are three primary functions in this class.
 ```javascript
-import {Contract} from '../lib/idanalyzer.js'
+import {Contract, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let c = new Contract('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     c.throwApiException(true)
     let temp = await c.createTemplate('tempName', '<p>%{fullName}</p>')
@@ -91,16 +94,18 @@ try {
         console.log(e.message)
     }
 }
+
 ```
 
 ## Docupass
 This category supports all rapid user verification based on the ids and the face images provided.
 ![DocuPass Screen](https://www.idanalyzer.com/img/docupassliveflow.jpg)
 ```javascript
-import {Docupass} from '../lib/idanalyzer.js'
+import {Docupass, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let d = new Docupass('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     d.throwApiException(true)
     let docuResp = await d.createDocupass("bbd8436953ef426e98d078953f258835")
@@ -118,15 +123,17 @@ try {
         console.log(e.message)
     }
 }
+
 ```
 
 ## Transaction
 This function enables the developer to retrieve a single transaction record based on the provided transactionId.
 ```javascript
-import {Transaction} from '../lib/idanalyzer.js'
+import {Transaction, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let t = new Transaction('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     t.throwApiException(true)
     console.log(await t.getTransaction("431a7cf45091420e9eaffa4e5370c896"))

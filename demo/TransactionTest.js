@@ -1,7 +1,8 @@
-import {Transaction} from '../lib/idanalyzer.js'
+import {Transaction, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let t = new Transaction('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     t.throwApiException(true)
     console.log(await t.getTransaction("431a7cf45091420e9eaffa4e5370c896"))

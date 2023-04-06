@@ -1,7 +1,8 @@
-import {Contract} from '../lib/idanalyzer.js'
+import {Contract, SetEndpoint} from '../lib/idanalyzer.js'
 import {APIError, InvalidArgumentException} from "../lib/exception.js";
 
 try {
+    // SetEndpoint('https://yourip/') //on-premise
     let c = new Contract('OlZBrUWs4F60McKKKpuLKNY01XX7sm6B')
     c.throwApiException(true)
     let temp = await c.createTemplate('tempName', '<p>%{fullName}</p>')
