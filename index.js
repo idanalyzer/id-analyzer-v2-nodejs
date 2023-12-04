@@ -1,3 +1,3 @@
-var IdAnalyzer = require('./lib/idanalyzer.js');
+import * as IdAnalyzer from './lib/idanalyzer.js'
 
-module.exports = IdAnalyzer;
+export default IdAnalyzer
