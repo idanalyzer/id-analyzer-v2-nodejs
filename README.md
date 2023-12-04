@@ -8,7 +8,7 @@ We strongly discourage users to connect to ID Analyzer API endpoint directly  fr
 Install through npm
 
 ```bash
-npm install idanalyzer
+npm install idanalyzer2
 ```
 
 
