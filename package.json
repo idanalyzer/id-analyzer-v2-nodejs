@@ -1,8 +1,12 @@
 {
   "name": "idanalyzer2",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "ID Analyzer API V2 client library, scan and verify global passport, driver license and identification card.",
   "main": "index.js",
+  "types": "index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
   "directories": {
     "doc": "docs",
     "lib": "lib",
@@ -40,8 +44,7 @@
   },
   "homepage": "https://www.idanalyzer.com",
   "dependencies": {
-    "axios": "^0.21.4",
-    "moment": "^2.29.1"
+    "axios": "^1.7.7"
   },
   "type": "module"
 }
