@@ -35,7 +35,7 @@ TypeScript definitions are bundled (`index.d.ts`) — no `@types` package needed
 
 ## Authentication & region
 
-Pass your API key to each client, or set the `IDANALYZER_KEY` environment variable. The SDK targets the load-balanced US fleet (`https://api2.idanalyzer.com`) by default; set `IDANALYZER_REGION=eu` for the EU fleet (`https://api2-eu.idanalyzer.com`). An unrecognized region throws `InvalidArgumentException`. For on-premise [ID Fort](https://www.idanalyzer.com) deployments, call `SetEndpoint('https://your-host/')`.
+Pass your API key to each client, or set the `IDANALYZER_KEY` environment variable. The SDK targets the US endpoint (`https://api2.idanalyzer.com`) by default; set `IDANALYZER_REGION=eu` for the EU endpoint (`https://api2-eu.idanalyzer.com`). An unrecognized region throws `InvalidArgumentException`. For on-premise [ID Fort](https://www.idanalyzer.com) deployments, call `SetEndpoint('https://your-host/')`.
 
 ## Quick start
 
