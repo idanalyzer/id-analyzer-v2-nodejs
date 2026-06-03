@@ -1,6 +1,6 @@
 
 # ID Analyzer NodeJS
-This is a Javascript library for [ID Analyzer Identity Verification APIs](https://www.idanalyzer.com), though all the APIs can be called with without the library using simple HTTP requests as outlined in the [documentation](https://idanalyzer.helptal.com/help), you can use this library to accelerate server-side development.
+This is a Javascript library for [ID Analyzer Identity Verification APIs](https://www.idanalyzer.com), though all the APIs can be called with without the library using simple HTTP requests as outlined in the [documentation](https://developer.idanalyzer.com/help), you can use this library to accelerate server-side development.
 
 We strongly discourage users to connect to ID Analyzer API endpoint directly  from client-side applications that will be distributed to end user, such as mobile app, or in-browser JavaScript. Your API key could be easily compromised, and if you are storing your customer's information inside Vault they could use your API key to fetch all your user details. Therefore, the best practice is always to implement a client side connection to your server, and call our APIs from the server-side.
 
@@ -255,10 +255,10 @@ console.log(await acc.getAccount())
 ```
 
 ## Api Document
-[ID Analyzer Document](https://idanalyzer.helptal.com/help)
+[ID Analyzer Document](https://developer.idanalyzer.com/help)
 
 ## Demo
 Check out **/demo** folder for more JS demos.
 
 ## SDK Reference
-Check out [ID Analyzer NodeJS Reference](https://idanalyzer.helptal.com/help/nodejs)
+Check out [ID Analyzer NodeJS Reference](https://developer.idanalyzer.com/help/nodejs)
