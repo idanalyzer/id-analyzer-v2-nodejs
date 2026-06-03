@@ -11,6 +11,32 @@ Install through npm
 npm install idanalyzer2
 ```
 
+TypeScript type definitions are bundled (`index.d.ts`) — no `@types` package needed.
+
+## Base URL / Region
+By default the SDK targets the US fleet (`https://api2.idanalyzer.com`). To use the
+EU fleet (`https://api2-eu.idanalyzer.com`), set the `IDANALYZER_REGION` environment
+variable to `eu` before instantiating any client:
+
+```bash
+export IDANALYZER_REGION=eu   # "us" (default) or "eu"
+```
+
+An unrecognized region value throws `InvalidArgumentException`. For on-premise ID Fort
+deployments, call `SetEndpoint('https://your-host/')`.
+
+## API Coverage
+The SDK exposes the full ID Analyzer API v2 surface:
+
+- **Scanner** — `scan`, `quickScan`, `veryQuickScan`
+- **Biometric** — `verifyFace`, `verifyLiveness`
+- **AML** — `search` (`/aml`), `searchV3` (`/amlv3`)
+- **Contract** — `generate` + template CRUD
+- **Transaction** — get/list/update/delete, export, `saveImage`/`saveFile`
+- **Docupass** — `createDocupass`, `listDocupass`, `getDocupass`, `deleteDocupass`
+- **ProfileAPI** — KYC profile create/list/get/update/delete/export
+- **Webhook** — `listWebhook`, `resendWebhook`, `deleteWebhook`
+- **Account** — `getAccount` (`/myaccount`)
 
 ## Scanner
 This category supports all scanning-related functions specifically used to initiate a new identity document scan & ID face verification transaction by uploading based64-encoded images.
@@ -172,6 +198,62 @@ try {
 
 ```
 
+## AML
+Screen names, businesses and document numbers against global sanctions / PEP / watchlists.
+```javascript
+import IdAnalyzer from "idanalyzer2"
+let {AML, APIError, InvalidArgumentException} = IdAnalyzer
+
+let a = new AML('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
+a.throwApiException(true)
+let resp = await a.search("John Smith", "", 0, "US")        // POST /aml
+let respV3 = await a.searchV3("John Smith", "", 10, 1)       // POST /amlv3
+```
+
+## KYC Profiles (ProfileAPI)
+Create and manage server-side KYC profiles.
+```javascript
+import IdAnalyzer from "idanalyzer2"
+let {Profile, ProfileAPI} = IdAnalyzer
+
+let p = new ProfileAPI('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
+p.throwApiException(true)
+
+let cfg = new Profile(Profile.SECURITY_MEDIUM)
+cfg.decisionTrigger(1, 1)
+let created = await p.createProfile("My Onboarding Profile", cfg)
+let profileId = created.profileId
+await p.updateProfile(profileId, "My Onboarding Profile (v2)", cfg)
+await p.getProfile(profileId)
+await p.listProfile()
+await p.exportProfile(profileId)
+await p.deleteProfile(profileId)
+```
+
+## Webhook
+List, resend and delete webhook delivery logs.
+```javascript
+import IdAnalyzer from "idanalyzer2"
+let {Webhook} = IdAnalyzer
+
+let w = new Webhook('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
+w.throwApiException(true)
+let logs = await w.listWebhook()
+// await w.resendWebhook("<webhookId>")
+// await w.deleteWebhook("<webhookId>")
+```
+
+## Account
+Retrieve account quota and usage.
+```javascript
+import IdAnalyzer from "idanalyzer2"
+let {Account} = IdAnalyzer
+
+let acc = new Account('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
+acc.throwApiException(true)
+console.log(await acc.getAccount())
+```
+
 ## Api Document
 [ID Analyzer Document](https://id-analyzer-v2.readme.io/docs/nodejs)
 
@@ -179,4 +261,4 @@ try {
 Check out **/demo** folder for more JS demos.
 
 ## SDK Reference
-Check out [ID Analyzer NodeJS Reference](https://idanalyzer.github.io/id-analyzer-nodejs/)
+Check out [ID Analyzer NodeJS Reference](https://idanalyzer.github.io/id-analyzer-v2-nodejs/)
