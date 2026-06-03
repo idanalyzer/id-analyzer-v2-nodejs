@@ -12,7 +12,7 @@ Full API v2 surface parity, security fixes, modern deps, and TypeScript types.
   CVE-2023-45857) and **removed the deprecated `moment` dependency** (date check is
   now a small regex + `Date`).
 - **Base URL** default `v2-us1.idanalyzer.com` (single node, no Cloudflare/LB/HA) →
-  load-balanced **`api2.idanalyzer.com`**. EU unchanged (`api2-eu` via `IDANALYZER_REGION=eu`).
+  **`api2.idanalyzer.com`**. EU unchanged (`api2-eu` via `IDANALYZER_REGION=eu`).
 - Unknown `IDANALYZER_REGION` now throws `InvalidArgumentException` instead of
   returning `undefined` (which broke every request).
 - Fixed `Profile.webhook()` protocol guard (`!== 'http' || !== 'https'` was always
