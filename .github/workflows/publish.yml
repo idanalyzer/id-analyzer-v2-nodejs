@@ -29,4 +29,11 @@ jobs:
       # Trusted publishing requires npm >= 11.5.1
       - run: npm install -g npm@latest
 
-      - run: npm publish --provenance --access public
+      - name: Publish (skip if version already exists)
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          if npm view "idanalyzer2@${VER}" version >/dev/null 2>&1; then
+            echo "idanalyzer2@${VER} already published — skipping."
+          else
+            npm publish --provenance --access public
+          fi
