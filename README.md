@@ -10,6 +10,7 @@ Scan and authenticate **passports, driver's licenses, ID cards, visas and reside
 
 - 🌐 **Website:** [www.idanalyzer.com](https://www.idanalyzer.com)
 - 📚 **Developer docs & API reference:** [developer.idanalyzer.com](https://developer.idanalyzer.com/help)
+- 📖 **Full SDK class reference (auto-generated):** [https://idanalyzer.github.io/id-analyzer-v2-nodejs/](https://idanalyzer.github.io/id-analyzer-v2-nodejs/)
 - 🔑 **Get your API key:** [portal2.idanalyzer.com](https://portal2.idanalyzer.com)
 - 💬 **Support:** support@idanalyzer.com
 
