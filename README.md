@@ -1,264 +1,103 @@
+# ID Analyzer Node.js SDK — Identity Verification, KYC, Document & Biometric API
 
-# ID Analyzer NodeJS
-This is a Javascript library for [ID Analyzer Identity Verification APIs](https://www.idanalyzer.com), though all the APIs can be called with without the library using simple HTTP requests as outlined in the [documentation](https://developer.idanalyzer.com/help), you can use this library to accelerate server-side development.
+[![npm version](https://img.shields.io/npm/v/idanalyzer2.svg)](https://www.npmjs.com/package/idanalyzer2)
+[![npm downloads](https://img.shields.io/npm/dm/idanalyzer2.svg)](https://www.npmjs.com/package/idanalyzer2)
+[![license](https://img.shields.io/npm/l/idanalyzer2.svg)](LICENSE)
 
-We strongly discourage users to connect to ID Analyzer API endpoint directly  from client-side applications that will be distributed to end user, such as mobile app, or in-browser JavaScript. Your API key could be easily compromised, and if you are storing your customer's information inside Vault they could use your API key to fetch all your user details. Therefore, the best practice is always to implement a client side connection to your server, and call our APIs from the server-side.
+Official Node.js / TypeScript client library for the **[ID Analyzer](https://www.idanalyzer.com) API v2** — automate identity document verification, KYC onboarding and biometric checks in minutes.
+
+Scan and authenticate **passports, driver's licenses, ID cards, visas and residence permits from 190+ countries**, run **1:1 face match and liveness detection**, screen against **AML / PEP / sanctions** watchlists, and onboard users remotely with **DocuPass** hosted verification & e-signature.
+
+- 🌐 **Website:** [www.idanalyzer.com](https://www.idanalyzer.com)
+- 📚 **Developer docs & API reference:** [developer.idanalyzer.com](https://developer.idanalyzer.com/help)
+- 🔑 **Get your API key:** [portal2.idanalyzer.com](https://portal2.idanalyzer.com)
+- 💬 **Support:** support@idanalyzer.com
+
+## Features
+
+- **Document OCR & authentication** — passport, driver's license, ID card, visa & residence-permit recognition from 190+ countries, including MRZ and PDF417 / AAMVA barcode parsing.
+- **Biometric verification** — 1:1 face match and liveness / presentation-attack detection.
+- **AML screening** — PEP, sanctions, watchlist and adverse-media checks.
+- **DocuPass** — hosted, no-code remote identity verification, KYC/AML onboarding and legally-binding e-signature.
+- **KYC profiles, transaction vault, contract generation and webhooks.**
+- **US & EU data-residency regions.**
+- Bundled **TypeScript** type definitions.
+
+> ⚠️ Never embed your API key in client-side apps (mobile, browser JS). Call the API from your server.
 
 ## Installation
-Install through npm
 
 ```bash
 npm install idanalyzer2
 ```
 
-TypeScript type definitions are bundled (`index.d.ts`) — no `@types` package needed.
+TypeScript definitions are bundled (`index.d.ts`) — no `@types` package needed.
 
-## Base URL / Region
-By default the SDK targets the US fleet (`https://api2.idanalyzer.com`). To use the
-EU fleet (`https://api2-eu.idanalyzer.com`), set the `IDANALYZER_REGION` environment
-variable to `eu` before instantiating any client:
+## Authentication & region
 
-```bash
-export IDANALYZER_REGION=eu   # "us" (default) or "eu"
-```
+Pass your API key to each client, or set the `IDANALYZER_KEY` environment variable. The SDK targets the load-balanced US fleet (`https://api2.idanalyzer.com`) by default; set `IDANALYZER_REGION=eu` for the EU fleet (`https://api2-eu.idanalyzer.com`). An unrecognized region throws `InvalidArgumentException`. For on-premise [ID Fort](https://www.idanalyzer.com) deployments, call `SetEndpoint('https://your-host/')`.
 
-An unrecognized region value throws `InvalidArgumentException`. For on-premise ID Fort
-deployments, call `SetEndpoint('https://your-host/')`.
+## Quick start
 
-## API Coverage
-The SDK exposes the full ID Analyzer API v2 surface:
-
-- **Scanner** — `scan`, `quickScan`, `veryQuickScan`
-- **Biometric** — `verifyFace`, `verifyLiveness`
-- **AML** — `search` (`/aml`), `searchV3` (`/amlv3`)
-- **Contract** — `generate` + template CRUD
-- **Transaction** — get/list/update/delete, export, `saveImage`/`saveFile`
-- **Docupass** — `createDocupass`, `listDocupass`, `getDocupass`, `deleteDocupass`
-- **ProfileAPI** — KYC profile create/list/get/update/delete/export
-- **Webhook** — `listWebhook`, `resendWebhook`, `deleteWebhook`
-- **Account** — `getAccount` (`/myaccount`)
-
-## Scanner
-This category supports all scanning-related functions specifically used to initiate a new identity document scan & ID face verification transaction by uploading based64-encoded images.
-![Sample ID](https://www.idanalyzer.com/img/sampleid1.jpg)
 ```javascript
 import IdAnalyzer from "idanalyzer2"
-let {Profile, Scanner, SetEndpoint, APIError, InvalidArgumentException} = IdAnalyzer
-import fs from "node:fs/promises"
+const { Profile, Scanner, APIError, InvalidArgumentException } = IdAnalyzer
 
-let scanDemo = async () => {
-    try {
-        // SetEndpoint('https://yourip/') //on-premise
-        let profile = new Profile(Profile.SECURITY_MEDIUM)
-        let s = new Scanner('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
-        s.throwApiException(true)
-        let quickResult = await s.quickScan("05.png", "", true)
-        await fs.writeFile("./quickscan.json", JSON.stringify(quickResult))
-        s.setProfile(profile)
-        let scanResult = await s.scan("05.png")
-        await fs.writeFile("./scan.json", JSON.stringify(scanResult))
-    } catch (e) {
-        if(e instanceof InvalidArgumentException) {
-            console.log("InvalidArgumentException => ", e.message)
-        } else if(e instanceof APIError) {
-            console.log("APIError => ", e.code, e.msg)
-        } else {
-            console.log("unknown error => ", e.message)
-        }
-    }
-}
+const scanner = new Scanner("YOUR_API_KEY")
+scanner.throwApiException(true)
+scanner.setProfile(new Profile(Profile.SECURITY_MEDIUM))
 
-scanDemo()
+// Scan a document + selfie for biometric verification
+const result = await scanner.scan("id_front.jpg", "", "selfie.jpg")
+console.log(result.decision)   // accept / review / reject
 ```
 
-## Biometric
-There are two primary functions within this class. The first one is verifyFace and the second is verifyLiveness.
+## Examples
+
 ```javascript
-import IdAnalyzer from "idanalyzer2"
-let {Profile, Biometric, SetEndpoint, APIError, InvalidArgumentException} = IdAnalyzer
-import fs from "node:fs/promises"
+// AML / PEP / sanctions screening
+const { AML } = IdAnalyzer
+const aml = new AML("YOUR_API_KEY")
+await aml.search("John Smith", "", 0, "US")      // POST /aml
+await aml.searchV3("John Smith", "", 10, 1)      // POST /amlv3
 
-try {
-    // SetEndpoint('https://yourip/') //on-premise
-    let profile = new Profile(Profile.SECURITY_MEDIUM)
-    let b = new Biometric('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
-    b.throwApiException(true)
-    b.setProfile(profile)
-    await fs.writeFile("./verifyFace.json", JSON.stringify(await b.verifyFace('05.png', '05.png')))
-    await fs.writeFile("./verifyLiveness.json", JSON.stringify(await b.verifyLiveness('05.png')))
-} catch (e) {
-    if(e instanceof InvalidArgumentException) {
-        console.log(e.message)
-    } else if(e instanceof APIError) {
-        console.log(e.code, e.msg)
-    } else {
-        console.log(e.message)
-    }
-}
-
+// DocuPass — hosted remote verification link
+const { Docupass } = IdAnalyzer
+const docupass = new Docupass("YOUR_API_KEY")
+const link = await docupass.createDocupass("YOUR_PROFILE_ID")
+console.log(link.url)
 ```
 
-## Contract
-All contract-related feature sets are available in Contract class. There are three primary functions in this class.
-```javascript
-import IdAnalyzer from "idanalyzer2"
-let {Profile, Contract, SetEndpoint, APIError, InvalidArgumentException} = IdAnalyzer
-import fs from "node:fs/promises"
+More demos in the [`/demo`](demo) folder.
 
-try {
-    // SetEndpoint('https://yourip/') //on-premise
-    let c = new Contract('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
-    c.throwApiException(true)
-    let temp = await c.createTemplate('tempName', '<p>%{fullName}</p>')
-    let tempId = temp['templateId']
-    console.log("temp -> ", temp)
-    console.log("tempId -> ", tempId)
+## API coverage
 
-    await fs.writeFile("./updateTemplate.json", JSON.stringify(await c.updateTemplate(tempId, "oldTemp", "<p>%{fullName}</p><p>Hello!!</p>")))
-    await fs.writeFile("./getTemplate.json", JSON.stringify(await c.getTemplate(tempId)))
-    await fs.writeFile("./listTemplate.json", JSON.stringify(await c.listTemplate()))
-    await fs.writeFile("./generate.json", JSON.stringify(await c.generate(tempId, "PDF", "", {
-        'fullName': "Tian",
-    })))
-    await fs.writeFile("./listTemplate.json", JSON.stringify(await c.deleteTemplate(tempId)))
-} catch (e) {
-    if(e instanceof InvalidArgumentException) {
-        console.log(e.message)
-    } else if(e instanceof APIError) {
-        console.log(e.code, e.msg)
-    } else {
-        console.log(e.message)
-    }
-}
+The SDK wraps the complete ID Analyzer API v2 surface:
 
+| Class | Methods |
+|---|---|
+| `Scanner` | `scan`, `quickScan`, `veryQuickScan` |
+| `Biometric` | `verifyFace`, `verifyLiveness` |
+| `AML` | `search` (`/aml`), `searchV3` (`/amlv3`) |
+| `Contract` | `generate` + template CRUD |
+| `Transaction` | `getTransaction`, `listTransaction`, `updateTransaction`, `deleteTransaction`, `exportTransaction`, `saveImage`, `saveFile` |
+| `Docupass` | `createDocupass`, `listDocupass`, `getDocupass`, `deleteDocupass` |
+| `ProfileAPI` | KYC profile create / list / get / update / delete / export |
+| `Webhook` | `listWebhook`, `resendWebhook`, `deleteWebhook` |
+| `Account` | `getAccount` |
+| `Profile` | client-side KYC profile-override builder |
 
-```
+## Resources
 
-## Docupass
-This category supports all rapid user verification based on the ids and the face images provided.
-![DocuPass Screen](https://www.idanalyzer.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdocupass-hero.0~_7a8exuldcn.webp&w=1080&q=75)
-```javascript
-import IdAnalyzer from "idanalyzer2"
-let {Profile, Scanner, SetEndpoint, APIError, InvalidArgumentException, Docupass} = IdAnalyzer
-import fs from "node:fs/promises"
+- [ID Analyzer website](https://www.idanalyzer.com)
+- [Developer documentation & API reference](https://developer.idanalyzer.com/help)
+- [Node.js SDK guide](https://developer.idanalyzer.com/help/nodejs)
+- [Dashboard — get your API key](https://portal2.idanalyzer.com)
 
-try {
-    // SetEndpoint('https://yourip/') //on-premise
-    let d = new Docupass('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
-    d.throwApiException(true)
-    let docuResp = await d.createDocupass("deb76a25f2404d38ac1dc2a1f355a5ef")
-    await fs.writeFile("./docupass.json", JSON.stringify(docuResp))
-    let docuReference = docuResp['reference']
-    console.log("reference => ", docuReference)
-    await fs.writeFile("./listDocupass.json", JSON.stringify(await d.listDocupass()))
-    console.log("delete docupass => ", await d.deleteDocupass(docuReference))
-} catch (e) {
-    if(e instanceof InvalidArgumentException) {
-        console.log(e.message)
-    } else if(e instanceof APIError) {
-        console.log(e.code, e.msg)
-    } else {
-        console.log(e.message)
-    }
-}
+## Other ID Analyzer SDKs
 
+[PHP](https://github.com/idanalyzer/id-analyzer-v2-php) · [Python](https://github.com/idanalyzer/id-analyzer-v2-python) · [Node.js](https://github.com/idanalyzer/id-analyzer-v2-nodejs) · [.NET](https://github.com/idanalyzer/id-analyzer-v2-dotnet) · [Java](https://github.com/idanalyzer/id-analyzer-v2-java) · [Go](https://github.com/idanalyzer/id-analyzer-v2-go)
 
-```
+## License
 
-## Transaction
-This function enables the developer to retrieve a single transaction record based on the provided transactionId.
-```javascript
-import IdAnalyzer from "idanalyzer2"
-let {Profile, Transaction, SetEndpoint, APIError, InvalidArgumentException} = IdAnalyzer
-import fs from "node:fs/promises"
-
-try {
-    // SetEndpoint('https://yourip/') //on-premise
-    let t = new Transaction('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
-    t.throwApiException(true)
-    await fs.writeFile("./listTransaction.json", JSON.stringify(await t.listTransaction()))
-    await fs.writeFile("./getTransaction.json", JSON.stringify(await t.getTransaction("bd328fe7271745fd92629577b7eec625")))
-    await fs.writeFile("./updateTransaction.json", JSON.stringify(await t.updateTransaction("bd328fe7271745fd92629577b7eec625", 'reject')))
-    await fs.writeFile("./deleteTransaction.json", JSON.stringify(await t.deleteTransaction("bd328fe7271745fd92629577b7eec625")))
-    await t.saveImage("e6cb3a24889485ecda073baacc5e7230045da7013d7d9c17a808c92e18b5dc8b", "test.jpg")
-    await t.saveFile("firstcontract_lrRI8FpiFltN72HlxoexPbEtNbrSRUTa.pdf", "test.pdf")
-    await t.exportTransaction("app.zip", [
-        "27784ecdff734e2a9ade9e6fecbc5d05",
-        "5d12a40ab5be4e9693812163bcc9cf85"
-    ], 'json')
-} catch (e) {
-    if(e instanceof InvalidArgumentException) {
-        console.log(e.message)
-    } else if(e instanceof APIError) {
-        console.log(e.code, e.msg)
-    } else {
-        console.log(e.message)
-    }
-}
-
-```
-
-## AML
-Screen names, businesses and document numbers against global sanctions / PEP / watchlists.
-```javascript
-import IdAnalyzer from "idanalyzer2"
-let {AML, APIError, InvalidArgumentException} = IdAnalyzer
-
-let a = new AML('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
-a.throwApiException(true)
-let resp = await a.search("John Smith", "", 0, "US")        // POST /aml
-let respV3 = await a.searchV3("John Smith", "", 10, 1)       // POST /amlv3
-```
-
-## KYC Profiles (ProfileAPI)
-Create and manage server-side KYC profiles.
-```javascript
-import IdAnalyzer from "idanalyzer2"
-let {Profile, ProfileAPI} = IdAnalyzer
-
-let p = new ProfileAPI('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
-p.throwApiException(true)
-
-let cfg = new Profile(Profile.SECURITY_MEDIUM)
-cfg.decisionTrigger(1, 1)
-let created = await p.createProfile("My Onboarding Profile", cfg)
-let profileId = created.profileId
-await p.updateProfile(profileId, "My Onboarding Profile (v2)", cfg)
-await p.getProfile(profileId)
-await p.listProfile()
-await p.exportProfile(profileId)
-await p.deleteProfile(profileId)
-```
-
-## Webhook
-List, resend and delete webhook delivery logs.
-```javascript
-import IdAnalyzer from "idanalyzer2"
-let {Webhook} = IdAnalyzer
-
-let w = new Webhook('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
-w.throwApiException(true)
-let logs = await w.listWebhook()
-// await w.resendWebhook("<webhookId>")
-// await w.deleteWebhook("<webhookId>")
-```
-
-## Account
-Retrieve account quota and usage.
-```javascript
-import IdAnalyzer from "idanalyzer2"
-let {Account} = IdAnalyzer
-
-let acc = new Account('GuH1YYus7ylJdWBDdhAiuSYXaAmQHZi3')
-acc.throwApiException(true)
-console.log(await acc.getAccount())
-```
-
-## Api Document
-[ID Analyzer Document](https://developer.idanalyzer.com/help)
-
-## Demo
-Check out **/demo** folder for more JS demos.
-
-## SDK Reference
-Check out [ID Analyzer NodeJS Reference](https://developer.idanalyzer.com/help/nodejs)
+MIT © [ID Analyzer](https://www.idanalyzer.com) — see [LICENSE](LICENSE).
